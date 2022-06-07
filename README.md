@@ -1,24 +1,11 @@
-# fireblogs
+# 🎩 AppDev_Official Website (In-Progress) 🔧
 
-## Project setup
+## Setup commands
 ```
-npm install
+npm install   // Install project's dependency
+npm run serve // Hot-reloads for development
+npm run build // Build for production
+npm run lint  // Lints and fixes files
 ```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+## Have FUN
+![alt text](https://s2.loli.net/2022/06/08/YToJ6EfqRMHgdKi.png)
