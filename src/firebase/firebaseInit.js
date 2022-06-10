@@ -1,5 +1,5 @@
-import firebase from "firebase/compact/app"
-import "firebase/compact/firestore"
+import firebase from "firebase/app"
+import "firebase/firestore"
 
 const firebaseConfig = {
     apiKey: "AIzaSyCmX9Ja9ffuSCsji6-z-a14S72xwHUYHqA",

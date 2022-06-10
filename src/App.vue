@@ -1,27 +1,67 @@
 <template>
   <div class="app-wrapper">
     <div class="app">
-      <Navigation />
+      <Navigation v-if="navigation"/>
       <router-view />
-      <Footer />
+      <Footer v-if="navigation"/>
     </div>
   </div>
 </template>
 
 <script>
-import Navigation from './components/Navigation'
-import Footer from './components/Footer'
+import Navigation from './components/Navigation';
+import Footer from './components/Footer';
+import firebase from "firebase/app";
+import "firebase/auth";
 
 export default {
   name: "app",
   components: { Navigation, Footer },
   data() {
-    return {};
+    return {
+      // Boolean that determines whether we display the navigation bar
+      navigation: null, 
+    };
   },
-  created() {},
+  // Similar to 'onLoad'
+  created() { 
+    // For every change in AuthState, we need to update the 'user' status
+    firebase.auth().onAuthStateChanged((user) => {
+      this.$store.commit("updateUser", user);
+      // If user is logged in, we run "getCurrentUser" method in Firestore
+      if(user) {
+        console.log("There is a User logged in.")
+        this.$store.dispatch("getCurrentuser");
+      }
+    })
+    
+    this.checkRoute();
+
+    // setTimeout(() => {
+    // console.log("(Firebase Connected) cur_uid: " + firebase.auth().currentUser.uid);
+    // }, 2000)
+  },
   mounted() {},
-  methods: {},
-  watch: {},
+  methods: {
+    // Methods that check whether we want the display of navigation bar
+    checkRoute() {
+      console.log("Checked the necessity of displaying navigation bar.");
+      if (this.$route.name === "Login" || 
+          this.$route.name === "Register" || 
+          this.$route.name === "ForgotPassword"
+      ) {
+        this.navigation = false;
+        return;
+      } 
+      this.navigation = true;
+    },
+  },
+  watch: {
+    // For every change of route, we want to re-check whether we want to display the navigation bar
+    $route() {
+      this.checkRoute();
+    }
+  },
 };
 </script>
 
@@ -143,5 +183,11 @@ button,
       grid-template-columns: repeat(4, 1fr);
     }
   }
+}
+
+.error {
+  text-align: center;
+  font-size: 12px;
+  color: red;
 }
 </style>

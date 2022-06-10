@@ -1,5 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import firebase from "firebase/app";
+import "firebase/auth";
+import db from "../firebase/firebaseInit";
 
 Vue.use(Vuex)
 
@@ -28,14 +31,45 @@ export default new Vuex.Store({
       },
     ],
     editPost: false,
+    user: null, // Boolean: whether we get user logged in or not
+    profileEmail: null,
+    profileFirstName: null,
+    profileLastName: null,
+    profileUsername: null,
+    profileId: null,
+    profileInitials: null,
   },
   mutations: {
+    // Updates Page 'Toggle Edit Post' button
     toggleEditPost(state, payload) {
       state.editPost = payload;
       console.log(state.editPost);
-    }
+    },
+    updateUser(state, payload) {
+      state.user = payload;
+    },
+    setProfileInfo(state, doc) {
+      state.profileId = doc.id;
+      state.profileEmail = doc.data().email;
+      state.profileLastName = doc.data().lastName;
+      state.profileFirstName = doc.data().firstName;
+      state.profileUsername = doc.data().profileUsername;
+    },
+    setProfileInitials(state) {
+      state.profileInitials = 
+        state.profileFirstName.match(/(\b\S)?/g).join("") +
+        state.profileLastName.match(/(\b\S)?/g).join("");
+    },
   },
   actions: {
+    async getCurrentuser({ commit }) {
+      const dataBase = await db.collection('users').doc(firebase.auth().currentUser.uid);
+      const dbResults = await dataBase.get();
+      commit("setProfileInfo", dbResults); // commit to specific mutation with certain payload
+      commit("setProfileInitials")
+      console.log(dbResults);
+      console.log("From Firestore: " + this.state.profileEmail + " + " + this.state.profileInitials);
+    }
   },
   modules: {
   }
