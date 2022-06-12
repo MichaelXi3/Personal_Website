@@ -44,10 +44,10 @@ export default {
         instagram,
         Linkedin,
     },
-    data() {
-        return {
-            user: false,
-        };
+    computed: {
+        user() {
+            return this.$store.state.user; // Boolean of user login or not
+        },
     },
 }
 </script>

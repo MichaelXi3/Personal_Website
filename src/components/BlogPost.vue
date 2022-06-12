@@ -2,10 +2,10 @@
   <div class="blog-wrapper no-user">
       <div class="blog-content">
           <div> 
-              <h2 v-if="post.welcomeScreen">{{ post.title }}</h2>
+              <h2 v-if="post.welcomeScreen || post.welcomeScreenLogin">{{ post.title }}</h2>
               <h2 v-else>{{ post.title }}</h2>
-              <p v-if="post.welcomeScreen">{{ post.blogPost }}</p>
-              <p class="content-preview" v-else>{{ post.blogHTML }}</p>
+              <p v-if="post.welcomeScreen || post.welcomeScreenLogin">{{ post.blogPost }}</p>
+              <p v-else class="content-preview">{{ post.blogHTML }}</p>
               <router-link class="link link-light" v-if="post.welcomeScreen" to="#"> Login/Register<Arrow class="arrow arrow-light" />
               </router-link>
               <router-link class="link" v-else to="#"> View the App <Arrow class="arrow" />
@@ -13,7 +13,7 @@
           </div>
       </div>
       <div class="blog-photo">
-        <img v-if="post.welcomeScreen" :src="require(`../assets/blogPhotos/${post.photo}.jpg`)" alt="">
+        <img v-if="post.welcomeScreen || post.welcomeScreenLogin" :src="require(`../assets/blogPhotos/${post.photo}.jpg`)" alt="">
         <img v-else :src="require(`../assets/blogPhotos/${post.blogCoverPhoto}.jpg`)" alt="">
       </div>
   </div>
@@ -141,7 +141,7 @@ export default {
 
 .no-user:first-child {
     .blog-content {
-        background-color: #878787;
+        background-color: #303030;
         color: #fff;
     }
 }
