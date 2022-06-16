@@ -1,6 +1,6 @@
 <template>
   <div class="app-wrapper">
-    <div class="app">
+    <div class="app" v-if="this.$store.state.postLoaded">
       <Navigation v-if="navigation"/>
       <router-view />
       <Footer v-if="navigation"/>
@@ -28,18 +28,16 @@ export default {
     // For every change in AuthState, we need to update the 'user' status
     firebase.auth().onAuthStateChanged((user) => {
       this.$store.commit("updateUser", user);
-      // If user is logged in, we run "getCurrentUser" method in Firestore
+      // If User is logged in, we run "getCurrentUser" method in Firestore
       if(user) {
-        console.log("There is a User logged in.")
-        this.$store.dispatch("getCurrentuser");
+        console.log("There is a User logged in.");
+        this.$store.dispatch("getCurrentuser", user);
       }
     })
-    
+    // Check the display status of navigation router
     this.checkRoute();
-
-    // setTimeout(() => {
-    // console.log("(Firebase Connected) cur_uid: " + firebase.auth().currentUser.uid);
-    // }, 2000)
+    // Get all posts from Firebase database
+    this.$store.dispatch("getPost");
   },
   mounted() {},
   methods: {

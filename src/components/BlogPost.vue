@@ -3,18 +3,20 @@
       <div class="blog-content">
           <div> 
               <h2 v-if="post.welcomeScreen || post.welcomeScreenLogin">{{ post.title }}</h2>
-              <h2 v-else>{{ post.title }}</h2>
-              <p v-if="post.welcomeScreen || post.welcomeScreenLogin">{{ post.blogPost }}</p>
-              <p v-else class="content-preview">{{ post.blogHTML }}</p>
-              <router-link class="link link-light" v-if="post.welcomeScreen" to="#"> Login/Register<Arrow class="arrow arrow-light" />
-              </router-link>
-              <router-link class="link" v-else to="#"> View the App <Arrow class="arrow" />
-              </router-link>
+              <h2 v-else>{{ post.blogTitle }}</h2>
+
+              <p style="font-size: large;" v-if="post.welcomeScreen || post.welcomeScreenLogin">{{ post.blogPost }}</p>
+              <p v-else class="content-preview" v-html="post.blogHTML"></p>
+
+              <!-- <router-link v-if="!user" class="link link-light" :to="{ name: 'Login' }"> Login/Register <Arrow class="arrow arrow-light" /></router-link> -->
+              
+              <h4 v-if="post.welcomeScreen || post.welcomeScreenLogin"></h4>
+              <router-link class="link" v-else :to="{ name: 'ViewBlog', params: {blogid: this.post.blogID} }"> View the Post <Arrow class="arrow" /></router-link>
           </div>
       </div>
       <div class="blog-photo">
         <img v-if="post.welcomeScreen || post.welcomeScreenLogin" :src="require(`../assets/blogPhotos/${post.photo}.jpg`)" alt="">
-        <img v-else :src="require(`../assets/blogPhotos/${post.blogCoverPhoto}.jpg`)" alt="">
+        <img v-else :src="post.blogCoverPhoto" alt="" />
       </div>
   </div>
 </template>
@@ -27,6 +29,12 @@ export default {
     components: {
         Arrow,
     },
+    computed: {
+    // Get Boolean from FireStore that indicates whether there is a user logged in
+    user() {
+      return this.$store.state.user;
+    },
+  }
 };
 </script>
 
@@ -83,7 +91,7 @@ export default {
             max-height: 24px;
             width: 250px; // Need to be revisited
             white-space: nowrap;
-            overflow: hidden;
+            overflow:hidden;
             text-overflow: ellipsis;
         }
 
@@ -141,7 +149,8 @@ export default {
 
 .no-user:first-child {
     .blog-content {
-        background-color: #303030;
+        // background-color: #303030;
+        background-image: url("https://wallpapers-hub.art/wallpaper-images/13333.jpg");
         color: #fff;
     }
 }

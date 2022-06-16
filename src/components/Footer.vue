@@ -20,7 +20,8 @@
                 <ul>
                     <router-link class="link" :to="{ name: 'Home' }">Home</router-link>
                     <router-link class="link" :to="{ name: 'Blogs' }">Updates</router-link>
-                    <router-link v-if="user" class="link" :to="{ name: 'newpost' }">Create Post</router-link>
+                    <router-link class="link" :to="{ name: 'Team'}">Team</router-link>
+                    <router-link v-if="admin" class="link" :to="{ name: 'CreatePost'}">Create Post</router-link>
                     <router-link v-if="!user" class="link" :to="{ name: 'Login' }">Login/Register</router-link>
                 </ul>
               </div>
@@ -47,6 +48,9 @@ export default {
     computed: {
         user() {
             return this.$store.state.user; // Boolean of user login or not
+        },
+        admin() {
+            return this.$store.state.profileAdmin; // Boolean of whether user is admin
         },
     },
 }

@@ -30,8 +30,18 @@ export default new Vuex.Store({
         blogDate: "May 25, 2022",
       },
     ],
-    editPost: false,
-    user: null, // Boolean: whether we get user logged in or not
+    blogPost:[],
+    postLoaded: null,
+
+    blogHTML: "Write your updates here...",
+    blogTitle: "",
+    blogPhotoName: "", // BlogCoverPhotoName
+    blogPhotoFileURL: null,
+    blogPhotoPreview: null,
+    editPost: null,    // Boolean: whether the editPost button is displayed or not
+
+    user: null,        // Boolean: whether the user logged in or not
+    profileAdmin: null,
     profileEmail: null,
     profileFirstName: null,
     profileLastName: null,
@@ -39,11 +49,55 @@ export default new Vuex.Store({
     profileId: null,
     profileInitials: null,
   },
+  getters: {
+    blogPostsFeed(state) {
+      return state.blogPost.filter((post) => post.blogID === "AyWWBio64p23tdnP55as" || post.blogID === "IyjjcBUaRTr8MsUKMKeD" || post.blogID === "OVduB2FBysWNmDuAH5Gc");
+    },
+    blogPostsCards(state) {
+      return state.blogPost.slice(0, 4);
+    },
+    allBlogPosts(state) {
+      return state.blogPost;
+    },
+  },
   mutations: {
+    // Create new blog post, invoke by changing blogHTML
+    newBlogPost(state, payload) {
+      state.blogHTML = payload;
+      // console.log(state.blogHTML);
+    },
+    // Change BlogTitle
+    updateBlogTitle(state, payload) {
+      state.blogTitle = payload;
+    },
+    // Update the photoName of user's uploaded photo
+    fileNameChange(state, payload) {
+      state.blogPhotoName = payload;
+    },
+    // Update the photoURL of user's uploaded photo
+    createFileURL(state, payload) {
+      state.blogPhotoFileURL = payload;
+    },
     // Updates Page 'Toggle Edit Post' button
     toggleEditPost(state, payload) {
       state.editPost = payload;
-      console.log(state.editPost);
+    },
+    // For updating frontend after deletion
+    filterBlogPost(state, payload) {
+        state.blogPost = state.blogPost.filter((post) => 
+        post.blogID !== payload
+      );
+    },
+    // For setting status of blogPost after edit post
+    setBlogState(state, payload) {
+      state.blogTitle = payload.blogTitle;
+      state.blogHTML = payload.blogHTML;
+      state.blogPhotoFileURL = payload.blogCoverPhoto;
+      state.blogPhotoName = payload.blogCoverPhotoName;
+    },
+    // Open & close the photo preview during 'create post'
+    openPhotoPreview(state) {
+      state.blogPhotoPreview = !state.blogPhotoPreview;
     },
     // Update the state of user login
     updateUser(state, payload) {
@@ -61,6 +115,10 @@ export default new Vuex.Store({
         state.profileFirstName.match(/(\b\S)?/g).join("") +
         state.profileLastName.match(/(\b\S)?/g).join("");
     },
+    setProfileAdmin(state, payload) {
+      state.profileAdmin = payload;
+      console.log("Admin Status: ", state.profileAdmin);
+    },
     changeFirstName(state, payload) {
       state.profileFirstName = payload;
     },
@@ -72,14 +130,19 @@ export default new Vuex.Store({
     },
   },
   actions: {
-    async getCurrentuser({ commit }) {
+    async getCurrentuser({ commit }, user) {
+      // Set curUser info after log-in
       const dataBase = await db.collection('users').doc(firebase.auth().currentUser.uid);
       const dbResults = await dataBase.get();
-      commit("setProfileInfo", dbResults); // commit to specific mutation with certain payload
+      commit("setProfileInfo", dbResults); // Commit to specific mutation with certain payload
       commit("setProfileInitials");
-      console.log(dbResults);
       console.log("From Firestore: " + this.state.profileEmail + " + " + this.state.profileInitials);
+      // Obtain the admin status info of curUser
+      const token = await user.getIdTokenResult();
+      const admin = await token.claims.admin; // Boolean
+      commit('setProfileAdmin', admin);
     },
+
     async updateUserSettings({ commit, state }) {
       const dataBase = await db.collection('users').doc(state.profileId);
       await dataBase.update({
@@ -88,6 +151,43 @@ export default new Vuex.Store({
         userName: state.profileUsername,
       });
       commit("setProfileInitials"); // Reset user's Initials based on new First and Last name
+    },
+
+    // Populate the posts from Firebase database to Firestore
+    async getPost({ state }) {
+      const dataBase = await db.collection("blogPosts").orderBy('date', 'desc');
+      const dbResults = await dataBase.get(); // This returns an array
+      dbResults.forEach(doc => {
+        // newly added doc does not already exist in blogPost array
+        if (!state.blogPost.some(post => post.blogID === doc.id)) {
+          // Object: new post
+          const data = {
+            blogID: doc.data().blogID,
+            blogHTML: doc.data().blogHTML,
+            blogCoverPhoto: doc.data().blogCoverPhoto,
+            blogTitle: doc.data().blogTitle,
+            blogDate: doc.data().date,
+            blogCoverPhotoName: doc.data().blogCoverPhotoName,
+          };
+          state.blogPost.push(data);
+        }
+      });
+      state.postLoaded = true;
+    },
+
+    // Delete Post Action
+    async deletePost({ commit }, payload) {
+      // Delete from the backend db
+      const getPost = await db.collection("blogPosts").doc(payload);
+      await getPost.delete();
+      // Commit the delete change to frontend
+      commit("filterBlogPost", payload);
+    },
+
+    // Updating Post
+    async updatePost({ commit, dispatch }, payload) {
+      commit("filterBlogPost", payload);
+      await dispatch("getPost");
     }
   },
   modules: {

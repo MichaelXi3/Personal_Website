@@ -1,21 +1,28 @@
 <template>
   <div class="home">
+    <!-- Welcome Display: AppDev Logo -->
     <BlogPost v-if="!user" :post="welcomeScreen" />
     <BlogPost v-if="user" :post="welcomeScreenLogin" />
-    <BlogPost :post="post" v-for="(post, index) in sampleBlogPost" :key="index" />
+
+    <!-- BlogPosts Display: AppDev Apps Intro -->
+    <BlogPost :post="post" v-for="(post, index) in blogPostsFeed" :key="index" />
+
+    <!-- BlogCards Display: AppDev lastest Updates Show at Here -->
     <div class="blog-card-wrap">
       <div class="container">
         <h3>View our recent updates</h3>
         <div class="blog-cards">
-          <BlogCard :post="post" v-for="(post, index) in sampleBlogCards" :key="index" />
+          <BlogCard :post="post" v-for="(post, index) in blogPostsCards" :key="index" />
         </div>
       </div>
     </div>
+
+    <!-- If currently not user, display this portion to recommend for Registration -->
     <div v-if="!user" class="updates">
       <div class="container">
         <h2>Register Now to see our latest updates!</h2>
-        <router-link class="router-button" to="#">
-          Register for WFU_AppDev Updates <Arrow class="arrow arrow-light" />
+        <router-link class="router-button" :to="{ name: 'Login' }">
+          Register for AppDev Updates <Arrow class="arrow arrow-light" />
         </router-link>
       </div>
     </div>
@@ -33,8 +40,8 @@ export default {
   data() {
     return {
       welcomeScreen: {
-        title: "Hello From WFU AppDev! 🎩",
-        blogPost: "Seeking the interaction between technology and humanity.",
+        title: "Greeting From WFU AppDev! 🎩",
+        blogPost: "Think bold and be creative.",
         welcomeScreen: true,
         photo: "DevLogo",
       },
@@ -59,9 +66,18 @@ export default {
     };
   },
   computed: {
+    // Getter: to get the blogPost info from FireStore
+    blogPostsCards() {
+      return this.$store.getters.blogPostsCards;
+    },
+    blogPostsFeed() {
+      return this.$store.getters.blogPostsFeed;
+    },
+
     sampleBlogCards() {
       return this.$store.state.sampleBlogCards
     },
+    // Get Boolean from FireStore that indicates whether there is a user logged in
     user() {
       return this.$store.state.user;
     },
