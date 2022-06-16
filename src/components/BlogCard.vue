@@ -1,18 +1,18 @@
 <template>
     <div class="blog-card">
         <div v-show="editPost" class="icons">
-            <div class="icon">
+            <div @click="editBlog" class="icon">
                 <Edit class="edit" />
             </div>
-            <div class="icon">
+            <div @click="deletePost" class="icon">
                 <Delete class="delete" />
             </div>
         </div>
-        <img :src="require(`../assets/blogCards/${post.blogCoverPhoto}.jpg`)" alt="">
+        <img :src="post.blogCoverPhoto" alt="">
         <div class="info">
             <h4>{{post.blogTitle}}</h4>
-            <h6>Posted on: {{post.blogDate}}</h6>
-            <router-link class="link" to="#">View The Post <Arrow class="arrow" /></router-link>
+            <h6>Posted on: {{ new Date(post.blogDate).toLocaleString('en-us', { dateStyle: "long" }) }}</h6>
+            <router-link class="link" :to="{ name: 'ViewBlog', params: {blogid: this.post.blogID} }">View The Post<Arrow class="arrow" /></router-link>
         </div>
     </div>
 </template>
@@ -35,6 +35,14 @@ export default {
             return this.$store.state.editPost;
         },
     },
+    methods: {
+        deletePost() {
+            this.$store.dispatch("deletePost", this.post.blogID);
+        },
+        editBlog() {
+            this.$router.push({ name: 'EditBlog', params: { blogid: this.post.blogID }});
+        }
+    },
 };
 </script>
 
@@ -46,7 +54,8 @@ export default {
     flex-direction: column;
     border-radius: 8px;
     background-color: #fff;
-    min-height: 400px;
+    min-height: 450px;
+    max-height: 450px;
     transition: .5s ease all;
 
     &:hover {
@@ -100,7 +109,7 @@ img {
     border-radius: 8px 8px 0 0;
     z-index: 1;
     width: 100%;
-    min-height: 200px;
+    min-height: 250px;
     object-fit: cover;
 }
 
