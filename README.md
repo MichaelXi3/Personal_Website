@@ -21,7 +21,4 @@ npm run serve // Hot-reloads for development
 npm run build // Build for production
 npm run lint  // Lints and fixes files
 ```
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
