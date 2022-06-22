@@ -153,7 +153,7 @@ router.beforeEach(async (to, from, next) => {
     let token = await user.getIdTokenResult();
     admin = token.claims.admin;
   }
-  // Check wether this route requires auth: true -> requires auth
+  // Check whether this route requires auth: true -> requires auth
   if (to.matched.some((res) => res.meta.requiresAuth)) {
     if(user) {
       if(to.matched.some((res) => res.meta.requiresAdmin)) {
@@ -162,6 +162,7 @@ router.beforeEach(async (to, from, next) => {
         }
         return next({name: "Home"});
       }
+      return next();
     }
     return next({name: "Home"});
   }

@@ -38,7 +38,7 @@ export default {
                 {
                 Name: "Jessica Chen",
                 Desc: "",
-                Photo: "DeaconEmojis",
+                Photo: "https://s2.loli.net/2022/06/17/7gFBYTesOqrUL6M.jpg",
                 },
                 {
                 Name: "Eric Gai",
@@ -56,8 +56,8 @@ export default {
 <style lang="scss" scoped>
 .teamContainer {
     background-image: url("https://img.freepik.com/free-vector/white-background-with-zigzag-pattern-design_1017-33197.jpg?w=2000");
-    @media (min-width: 1200px) {
-        padding: 0px 200px 0px;
+    @media (min-width: 1300px) {
+        padding: 0px 170px 0px;
     }
     .blog-card-wrap {
         padding: 60px 32px 100px;
@@ -70,6 +70,12 @@ export default {
 
         .blog-cards {
             position: relative;
+            @media (min-width: 1200px) {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            @media (min-width: 1600px) {
+                grid-template-columns: repeat(4, 1fr);
+            }
         }
     }
 }

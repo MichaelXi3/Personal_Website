@@ -37,34 +37,43 @@ export default {
     .container {
         display: flex;
         flex-direction: column;
-        margin-left: 24%;
-        margin-right: 24%;
         background-color: #fff;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+
+        margin: 0 4%;
+
+        @media (min-width: 1200px) {
+            margin: 0 20%;
+        }
 
         .imgCover {
             max-width: 600px;
             max-height: 600px;
-            align-items: center;
-            margin-left: 4.5%;
+            // align-items: center;
+            margin-left: 15%;
+            margin-right: 15%;
         }
 
         h2 {
             font-size: 36px;
             margin-top: 32px;
-            margin-left: 32px;
+            margin-left: 15%;
+            margin-right: 15%;
         }
 
         h4 {
             font-weight: 400;
             font-size: 14px;
             margin-bottom: 12px;
-            margin-left: 32px;
+            margin-left: 15%;
+            margin-right: 15%;
             margin-top: 10px;
         }
 
         .post-content {
-            margin: 32px;
+            margin-top: 20px;
+            margin-left: 15%;
+            margin-right: 15%;
         }
     }
 }

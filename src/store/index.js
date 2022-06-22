@@ -41,7 +41,7 @@ export default new Vuex.Store({
     editPost: null,    // Boolean: whether the editPost button is displayed or not
 
     user: null,        // Boolean: whether the user logged in or not
-    profileAdmin: null,
+    profileAdmin: null,// Boolean: whether the user is Admin
     profileEmail: null,
     profileFirstName: null,
     profileLastName: null,

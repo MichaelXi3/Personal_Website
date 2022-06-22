@@ -5,7 +5,7 @@
         <h2>Developer Profile</h2>
         <div class="profile-info">
             <div class="initials">{{ $store.state.profileInitials }}</div>
-            <div class="admin-badge">
+            <div v-show="admin" class="admin-badge">
                 <adminIcon class="icon" />
                 <span>admin</span>
             </div>
@@ -85,6 +85,9 @@ export default {
         },
         email() {
             return this.$store.state.profileEmail;
+        },
+        admin() {
+            return this.$store.state.profileAdmin;
         },
     }
 };

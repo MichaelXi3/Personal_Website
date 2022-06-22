@@ -15,12 +15,14 @@ exports.addAdminRole = functions.https.onCall((data, context) => {
         });
      // Success Notification
     }).then(() => {
+        console.log("Successfully Added!");
         return {
             message: `Success! ${data.email} has been made an admin!`,
         };
     })
     // Error Notification
     .catch((err) => {
+        console.log("Error");
         console.log(err);
     });
 });
