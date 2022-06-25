@@ -11,7 +11,7 @@ import CreatePost from "../views/CreatePost.vue";
 import BlogPreview from "../views/BlogPreview.vue";
 import ViewBlog from "../views/viewBlog.vue";
 import EditBlog from "../views/EditBlog.vue";
-import Team from  "../views/Team.vue";
+import Project from  "../views/Project.vue";
 
 import firebase from "firebase/app";
 
@@ -28,11 +28,11 @@ const routes = [
     },
   },
   {
-    path: "/updates",
+    path: "/blogs",
     name: "Blogs",
     component: Blogs,
     meta: {
-      title: "Updates",
+      title: "Blog",
       requiresAuth: false,
     },
   },
@@ -122,11 +122,11 @@ const routes = [
     },
   },
   {
-    path: "/team",
-    name: "Team",
-    component: Team,
+    path: "/project",
+    name: "Project",
+    component: Project,
     meta: {
-      title: "Team",
+      title: "Project",
       requiresAuth: false,
       requiresAdmin: false,
     },
@@ -141,7 +141,7 @@ const router = new VueRouter({
 
 // 页面标签栏的个性化显示 - tab_title
 router.beforeEach((to, from, next) => {
-  document.title = `${to.meta.title} | AppDev`;
+  document.title = `${to.meta.title} | Michael`;
   next();
 })
 

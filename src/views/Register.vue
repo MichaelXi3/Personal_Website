@@ -5,7 +5,7 @@
               Already have an account?
               <router-link class="router-link" :to="{ name: 'Login' }">Login</router-link>
           </p>
-          <h2>Create your AppDev Account</h2>
+          <h2>Create your Blog Account</h2>
           <div class="inputs">
               <div class="input">
                   <input type="text" placeholder="First Name" v-model="firstName" />

@@ -163,7 +163,8 @@ button,
   position: relative;
   padding: 80px 16px;
   background-color: #f1f1f1;
-  @media (min-width: 500px) {
+
+@media (min-width: 500px) {
     padding: 100px 16px;
   }
 
@@ -171,6 +172,7 @@ button,
     display: grid;
     gap: 32px;
     grid-template-columns: 1fr;
+    padding: 0 35px;
     @media (min-width: 500px) {
       grid-template-columns: repeat(2, 1fr);
     }
@@ -188,4 +190,5 @@ button,
   font-size: 12px;
   color: red;
 }
+
 </style>

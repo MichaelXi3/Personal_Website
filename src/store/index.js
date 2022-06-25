@@ -139,7 +139,9 @@ export default new Vuex.Store({
       console.log("From Firestore: " + this.state.profileEmail + " + " + this.state.profileInitials);
       // Obtain the admin status info of curUser
       const token = await user.getIdTokenResult();
-      const admin = await token.claims.admin; // Boolean
+      var admin = false;
+      if (token.claims.email === 'xiy20@wfu.edu' || token.claims.email === 'michael_yukunxi@163.com') { admin = true; }
+      // const admin = await token.claims.admin; // Boolean
       commit('setProfileAdmin', admin);
     },
 

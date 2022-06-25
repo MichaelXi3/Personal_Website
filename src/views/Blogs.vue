@@ -1,5 +1,8 @@
 <template>
     <div class="blog-card-wrap">
+        <div class="title">
+            <h1>Bloggie</h1>
+        </div>
         <div class="blog-cards container">
             <div class="toggle-edit">
                 <span>Toggle Editing Post</span>
@@ -43,6 +46,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+// Blog cards
+.blog-card-wrap {
+    background-color: #0E0B16;
+    padding-top: 50px;
+}
+
+.title {
+    margin-bottom: 90px;
+    margin-top: 0;
+}
+
 .blog-cards {
     position: relative;
 
@@ -52,10 +66,13 @@ export default {
         position: absolute;
         top: -70px;
         right: 0;
+        z-index: 99;
     }
 
     span {
         margin-right: 16px;
+        color: #E7DFDD;
+        font-weight: bolder;
     }
 
     input[type="checkbox"] {

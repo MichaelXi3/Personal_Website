@@ -3,13 +3,13 @@
       <div class="container">
           <div class="left">
               <div class="col-1">
-                <router-link class="header" :to="{ name: 'Home'}">AppDev</router-link>
+                <router-link class="header" :to="{ name: 'Home'}">Michael</router-link>
                 <ul>
                     <li>
-                        <a href="#"><YouTube class="svg-icon"/></a>
+                        <a href="https://www.youtube.com/channel/UCSy_Srhad_U21ju_zCUbILg"><YouTube class="svg-icon"/></a>
                     </li>
                     <li>
-                        <a href="#"><instagram class="svg-icon"/></a>
+                        <a href="https://www.instagram.com/michaelxiii3/"><instagram class="svg-icon"/></a>
                     </li>
                     <li>
                         <a href="https://www.linkedin.com/in/yukun-xi/"><Linkedin class="svg-icon"/></a>
@@ -19,15 +19,15 @@
               <div class="col-2">
                 <ul>
                     <router-link class="link" :to="{ name: 'Home' }">Home</router-link>
-                    <router-link class="link" :to="{ name: 'Blogs' }">Updates</router-link>
-                    <router-link class="link" :to="{ name: 'Team'}">Team</router-link>
+                    <router-link class="link" :to="{ name: 'Blogs' }">Blog</router-link>
+                    <router-link class="link" :to="{ name: 'Project'}">Project</router-link>
                     <router-link v-if="admin" class="link" :to="{ name: 'CreatePost'}">Create Post</router-link>
                     <router-link v-if="!user" class="link" :to="{ name: 'Login' }">Login/Register</router-link>
                 </ul>
               </div>
           </div>
           <div class="right">
-              <p>Seeking the interaction between technology and humanity</p>
+              <p>You can’t connect the dots looking forward; you can only connect them looking backwards. So you have to trust that the dots will somehow connect in your future.</p>
           </div>
       </div>
   </footer>
@@ -60,12 +60,14 @@ export default {
 footer {
     margin-top: auto;
     padding: 100px 25px;
-    background-color: #303030;
+    background-color: #0E0B16;
+    z-index: 99;
 
     .container {
         display: flex;
         flex-direction: column;
         gap: 32px;
+
         @media (min-width: 800px) {
             flex-direction: row;
             gap: 0px;
@@ -82,6 +84,7 @@ footer {
             display: flex;
             flex-direction: column;
             align-items: center;
+            margin-left: 70px;
             @media (min-width: 800px) {
                 flex-direction: row;
                 align-items: initial;

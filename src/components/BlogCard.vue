@@ -49,18 +49,19 @@ export default {
 <style lang="scss" scoped>
 .blog-card {
     position: relative;
-    cursor:pointer;
+    cursor: pointer;
     display: flex;
     flex-direction: column;
     border-radius: 8px;
-    background-color: #fff;
-    min-height: 450px;
-    max-height: 450px;
+    background-color: #E7DFDD;
+    min-height: 420px;
+    max-height: 420px;
     transition: .5s ease all;
-
+    z-index: 99;
+    
     &:hover {
-        transform: rotateZ(-1deg) scale(1.01);
-        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+        transform: scale(1.01);
+        box-shadow: 0 5px 10px -1px #6D7993, 0 5px 10px -1px #6D7993;
     }
 }
 

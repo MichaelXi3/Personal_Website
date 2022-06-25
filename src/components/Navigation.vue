@@ -2,14 +2,14 @@
     <header>
         <nav class="container">
             <div class="branding">
-                <router-link class="header" :to="{ name: 'Home'}">AppDev</router-link> 
+                <router-link class="header" :to="{ name: 'Home'}">Michael</router-link> 
             </div>
             <div class="nav-links">
                 <!-- top bar links only display on PC devices (wider screen)-->
                 <ul v-show="!mobile">
                     <router-link class="link" :to="{ name: 'Home'}">Home</router-link>
-                    <router-link class="link" :to="{ name: 'Blogs'}">Updates</router-link>
-                    <router-link class="link" :to="{ name: 'Team'}">Team</router-link>
+                    <router-link class="link" :to="{ name: 'Blogs'}">Blog</router-link>
+                    <router-link class="link" :to="{ name: 'Project'}">Project</router-link>
                     <!-- If current user is Admin, show 'Create Post' link -->
                     <router-link v-if="admin" class="link" :to="{ name: 'CreatePost'}">Create Post</router-link>
                     <!-- If there is no user currently login, show the link of 'Login/Register' -->
@@ -53,8 +53,8 @@
         <transition name="mobile-nav">
                 <ul class="mobile-nav" v-show="mobileNav">
                     <router-link class="link" :to="{ name: 'Home'}">Home</router-link>
-                    <router-link class="link" :to="{ name: 'Blogs'}">Updates</router-link>
-                    <router-link class="link" :to="{ name: 'Team'}">Team</router-link>
+                    <router-link class="link" :to="{ name: 'Blogs'}">Blog</router-link>
+                    <router-link class="link" :to="{ name: 'Project'}">Project</router-link>
                     <router-link v-if="admin" class="link" :to="{ name: 'CreatePost'}">Create Post</router-link>
                     <router-link v-if="!user" class="link" :to="{ name: 'Login'}">Login/Register</router-link>
                 </ul>
@@ -142,18 +142,19 @@ export default {
 
 <style lang="scss" scoped>
 header {
-    background-color: #fff;
+    background-color: #0E0B16;
     padding: 0 25px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    // box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     z-index: 99;
 
     .link {
         font-weight: 500;
         padding: 0 8px;
         transition: 0.3s color ease;
+        color: #E7DFDD;
 
         &:hover {
-            color: #1eb8b8;
+            color: #ffffff;
         }
     }
 
@@ -163,11 +164,11 @@ header {
         .branding {
             display: flex;
             align-items: center;
-
+            
             .header {
                 font-weight: 600;
                 font-size: 24px;
-                color: #000;
+                color: #E7DFDD;
                 text-decoration: none;
             }
         }
@@ -197,8 +198,8 @@ header {
                 width: 40px;
                 height: 40px;
                 border-radius: 50%;
-                color: #fff;
-                background-color: #303030;
+                color: #0E0B16;
+                background-color: #E7DFDD;
 
                 span {
                     pointer-events: none;
@@ -209,21 +210,22 @@ header {
                     top: 60px;
                     right: 0;
                     width: 250px;
-                    background-color: #303030;
+                    background-color: #0E0B16;
                     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 
                     .info {
                         display: flex;
                         align-items: center;
                         padding: 15px;
-                        border-bottom: 1px solid #fff;
+                        border-bottom: 1px solid #0E0B16;
 
                         .initials {
                             position: initial;
                             width: 40px;
                             height: 40px;
-                            background-color: #fff;
-                            color: #303030;
+                            background-color: #E7DFDD;
+                            color: #0E0B16;
+;
                             display: flex;
                             align-items: center;
                             justify-content: center;
@@ -233,6 +235,7 @@ header {
                         .right {
                             flex: 1;
                             margin-left: 24px;
+                            color: #E7DFDD;
                             p:nth-child(1) {
                                 font-size: 14px;
                             }
@@ -247,7 +250,8 @@ header {
                         padding: 15px;
                         .option {
                             text-decoration: none;
-                            color: #fff;
+                            color: #E7DFDD;
+;
                             display: flex;
                             align-items: center;
                             margin-bottom: 12px;
@@ -288,14 +292,15 @@ header {
         flex-direction: column;
         position: fixed;
         height: 100%;
-        background-color: #303030;
+        background-color: #0E0B16;
         top: 0;
         left: 0;
         .link {
             padding-top: 15px;
-            color: #fff;
+            color: #E7DFDD;
+
             &:hover {
-            color: #1eb8b8;
+            color: #ffffff;
         }
         }
     }

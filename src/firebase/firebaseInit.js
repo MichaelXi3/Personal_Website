@@ -2,13 +2,13 @@ import firebase from "firebase/app"
 import "firebase/firestore"
 
 const firebaseConfig = {
-    apiKey: "AIzaSyCmX9Ja9ffuSCsji6-z-a14S72xwHUYHqA",
-    authDomain: "bloggie-e75f5.firebaseapp.com",
-    projectId: "bloggie-e75f5",
-    storageBucket: "bloggie-e75f5.appspot.com",
-    messagingSenderId: "366390747706",
-    appId: "1:366390747706:web:67119fbb1801378c3fcb03",
-    measurementId: "G-QDY0QLY6JY"
+    apiKey: "AIzaSyB1WT5yQ-xPYecy7v4TxXM0kt7lu3xZNaE",
+    authDomain: "personalweb-55e41.firebaseapp.com",
+    projectId: "personalweb-55e41",
+    storageBucket: "personalweb-55e41.appspot.com",
+    messagingSenderId: "644338130707",
+    appId: "1:644338130707:web:b4ce2ea1756d82147684e6",
+    measurementId: "G-S52WNFEL2G"
   };
 
 const firebaseApp = firebase.initializeApp(firebaseConfig);
