@@ -2,7 +2,7 @@
 <div class="post-view">
     <div class="container quillWrapper">
         <h2>{{ this.blogTitle }}</h2>
-        <img :src="blogCoverPhoto" alt="" />
+        <!-- <img :src="blogCoverPhoto" alt="" /> -->
         <div class="post-content ql-editor" v-html="blogHTML"></div>
     </div>
 </div>

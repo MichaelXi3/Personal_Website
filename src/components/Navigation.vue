@@ -10,6 +10,7 @@
                     <router-link class="link" :to="{ name: 'Home'}">Home</router-link>
                     <router-link class="link" :to="{ name: 'Blogs'}">Blog</router-link>
                     <router-link class="link" :to="{ name: 'Project'}">Project</router-link>
+                    <router-link class="link" :to="{ name: 'Algo'}">Algo</router-link>
                     <!-- If current user is Admin, show 'Create Post' link -->
                     <router-link v-if="admin" class="link" :to="{ name: 'CreatePost'}">Create Post</router-link>
                     <!-- If there is no user currently login, show the link of 'Login/Register' -->
@@ -55,6 +56,7 @@
                     <router-link class="link" :to="{ name: 'Home'}">Home</router-link>
                     <router-link class="link" :to="{ name: 'Blogs'}">Blog</router-link>
                     <router-link class="link" :to="{ name: 'Project'}">Project</router-link>
+                    <router-link class="link" :to="{ name: 'Algo'}">Algo</router-link>
                     <router-link v-if="admin" class="link" :to="{ name: 'CreatePost'}">Create Post</router-link>
                     <router-link v-if="!user" class="link" :to="{ name: 'Login'}">Login/Register</router-link>
                 </ul>
@@ -300,8 +302,8 @@ header {
             color: #E7DFDD;
 
             &:hover {
-            color: #ffffff;
-        }
+                color: #ffffff;
+            }
         }
     }
 }

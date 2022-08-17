@@ -17,12 +17,13 @@
                   <span>File Chosen: {{ this.$store.state.blogPhotoName }}</span>
               </div>
           </div>
-          <div class="editor">
-              <vue-editor :editorOptions="editorSettings" useCustomImageHandler @image-added="imageHandler" v-model="blogHTML" />
+          <div>
+              <!-- <vue-editor :editorOptions="editorSettings" useCustomImageHandler @image-added="imageHandler" v-model="blogHTML" /> -->
+              <v-md-editor v-model="text" height="400px"></v-md-editor>
           </div>
           <div class="blog-actions">
               <button @click="uploadBlog">Publish Post</button>
-              <router-link class="router-button" :to="{ name: 'BlogPreview' }">See Preview</router-link>
+              <!--  <router-link class="router-button" :to="{ name: 'BlogPreview' }">See Preview</router-link> -->
           </div>
       </div>
   </div>
@@ -39,6 +40,7 @@ import db from "../firebase/firebaseInit";
 
 import Quill from "quill";
 window.Quill = Quill;
+
 const ImageResize = require("quill-image-resize-module").default;
 Quill.register("modules/imageResize", ImageResize);
 
@@ -50,11 +52,12 @@ export default {
             error: null,
             loading: null,
             errorMsg: null,
-            editorSettings: {
-                modules: {
-                    imageResize: {},
-                }
-            }
+            //editorSettings: {
+                // modules: {
+                //     imageResize: {},
+                // }
+            //},
+            text: '',
         };
     },
     computed: {
@@ -132,7 +135,7 @@ export default {
                         const dateBase = await db.collection("blogPosts").doc();
                         await dateBase.set({
                             blogID: dateBase.id,
-                            blogHTML: this.blogHTML,
+                            blogHTML: this.text,
                             blogCoverPhoto: downloadURL,
                             blogCoverPhotoName: this.blogCoverPhotoName,
                             blogTitle: this.blogTitle,
@@ -164,9 +167,9 @@ export default {
         },
     },
     components: {
-    BlogCoverPreview,
-    Loading
-}
+        BlogCoverPreview,
+        Loading
+    },
 }
 </script>
 
@@ -276,7 +279,7 @@ export default {
     }
 
     .editor {
-        height: 60vh;
+        max-height: 600px;
         display: flex;
         flex-direction: column;
 

@@ -17,12 +17,12 @@
                   <span>File Chosen: {{ this.$store.state.blogPhotoName }}</span>
               </div>
           </div>
-          <div class="editor">
-              <vue-editor :editorOptions="editorSettings" useCustomImageHandler @image-added="imageHandler" v-model="blogHTML" />
-          </div>
+
+          <v-md-editor v-model="blogHTML" height="400px"></v-md-editor>
+
           <div class="blog-actions">
               <button @click="updateBlog">Save Changes</button>
-              <router-link class="router-button" :to="{ name: 'BlogPreview' }">Preview Changes</router-link>
+              <!--  <router-link class="router-button" :to="{ name: 'BlogPreview' }">Preview Changes</router-link> -->
           </div>
       </div>
   </div>
@@ -52,11 +52,11 @@ export default {
             errorMsg: null,
             routeID: null,
             currentBlog: null,
-            editorSettings: {
-                modules: {
-                    imageResize: {},
-                }
-            }
+            // editorSettings: {
+            //     modules: {
+            //         imageResize: {},
+            //     }
+            // }
         };
     },
     computed: {

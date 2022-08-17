@@ -66,6 +66,7 @@ footer {
     .container {
         display: flex;
         flex-direction: column;
+        
         gap: 32px;
 
         @media (min-width: 800px) {
@@ -84,8 +85,9 @@ footer {
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-left: 70px;
+            // margin-right: 90px;
             @media (min-width: 800px) {
+                margin-left: 50px;
                 flex-direction: row;
                 align-items: initial;
                 gap: 0;
@@ -116,6 +118,7 @@ footer {
 
             .col-1 {
                 flex-direction: column;
+                align-items: center;
                 h2 {
                     text-align: center;
                     @media (min-width: 800px) {
@@ -170,6 +173,7 @@ footer {
             font-size: large;
             margin-top: auto;
             margin-bottom: auto;
+            padding-right: 3%;
         }
     }
 }

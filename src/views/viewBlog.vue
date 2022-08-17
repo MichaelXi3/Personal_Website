@@ -3,8 +3,10 @@
         <div class="container quillWrapper">
             <h2>{{ this.currentBlog[0].blogTitle }}</h2>
             <h4>Posted on: {{ new Date(this.currentBlog[0].blogDate).toLocaleString('en-us', {dataStyle:"long"})}}</h4>
-            <img class="imgCover" :src="this.currentBlog[0].blogCoverPhoto" alt="" />
-            <div class="post-content ql-editor" v-html="this.currentBlog[0].blogHTML"></div>
+            <!-- <img class="imgCover" :src="this.currentBlog[0].blogCoverPhoto" alt="" /> -->
+
+            <v-md-editor class="post-content ql-editor" v-model="this.content" mode="preview"></v-md-editor>
+            <!-- <div class="post-content ql-editor" v-html="markdownToHtml"></div> -->
         </div>
     </div>
 </template>
@@ -15,6 +17,12 @@ export default {
     data() {
         return {
             currentBlog: null,
+            content: null,
+        }
+    },
+    computed: {
+        markdownToHtml() {
+            return this.content;
         }
     },
     // Vue calls the mounted() hook when your component is added to the DOM. 
@@ -25,12 +33,15 @@ export default {
         this.currentBlog = await this.$store.state.blogPost.filter((post) => {
             return post.blogID === this.$route.params.blogid;
         });
+
+        this.content = this.currentBlog[0].blogHTML;
     },
 };
 </script>
 
 <style lang="scss">
 .post-view {
+    min-height: 570px;
     max-height: 100%;
     background-image: url('https://img.freepik.com/free-vector/stylish-hexagonal-line-pattern-background_1017-19742.jpg?w=2000');
 
@@ -40,10 +51,10 @@ export default {
         background-color: #fff;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 
-        margin: 0 4%;
+        margin: 0 3%;
 
         @media (min-width: 1200px) {
-            margin: 0 20%;
+            margin: 0 10%;
         }
 
         .imgCover {
@@ -72,8 +83,14 @@ export default {
 
         .post-content {
             margin-top: 20px;
-            margin-left: 15%;
-            margin-right: 15%;
+            margin-left: auto;
+            margin-right: auto;
+            min-width: max-content;
+            padding: 0 6%;
+
+            @media (min-width: 1200px) {
+                padding: 0 13%;
+            }
         }
     }
 }

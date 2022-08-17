@@ -57,7 +57,7 @@ export default {
     min-height: 420px;
     max-height: 420px;
     transition: .5s ease all;
-    z-index: 99;
+    //z-index: 99;
     
     &:hover {
         transform: scale(1.01);

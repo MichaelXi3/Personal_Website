@@ -12,7 +12,7 @@
     </div>
 
     <!-- HomePage Second Display -->
-    <div class="main2">
+    <div class="main2" v-show="isDesktop">
       <div class="headPic2">
         <img src="../assets/main2.png" alt="">
       </div>
@@ -54,7 +54,7 @@
           <router-link class="router-button" :to="{ name: 'Login' }"> Register </router-link>
         </div>
       </div>
-      <div class="registerPic">
+      <div class="registerPic" v-show="isDesktop">
         <img src="../assets/Register.png" alt="">
       </div>
     </div>
@@ -93,6 +93,7 @@ export default {
           blogCoverPhoto: "DeaconEmojis",
         },
       ],
+      isDesktop: null
     };
   },
   computed: {
@@ -114,6 +115,23 @@ export default {
     userName() {
       return this.$store.state.profileUsername;
     },
+  },
+  created() {
+    window.addEventListener("resize", this.checkScreen);
+    this.checkScreen();
+  },
+  methods: {
+    checkScreen() {
+            this.windowWidth = window.innerWidth;
+            // Mobile device
+            if (this.windowWidth <= 750) {
+                this.isDesktop = false;
+                return;
+            }
+            // PC device
+            this.isDesktop = true;
+            return;
+        }
   }
 };
 </script>
@@ -137,25 +155,38 @@ export default {
     justify-content: center;
     order: 0;
     flex: 1;
-    padding: 0 70px 0 100px;
+    padding: 0 30px 0 30px;
+
+    @media (min-width: 800px) {
+      padding: 0 70px 0 100px;
+    }
 
     h1 {
-      font-size: 82px;
+      font-size: 55px;
       color: #E7DFDD;
       transition: .5s ease-in all;
-
+      
       &:hover {
           color: #46e1fc;
       }
+
+      @media (min-width: 800px) {
+        font-size: 82px;
+      }
     }
+
     h2 {
-      font-size: 31px;
+      font-size: 26px;
       color: #E7DFDD;
       padding-top: 16px;
       transition: .5s ease-in all;
 
       &:hover {
           color: #6e46fc;
+      }
+
+      @media (min-width: 800px) {
+        font-size: 31px;
       }
     }
   }
@@ -201,12 +232,15 @@ export default {
     .heading2 {
       padding-bottom: 20px;
       h3 {
-        font-size: 45px;
+        font-size: 36px;
         color: #0E0B16;
         padding-top: 16px;
         transition: .5s ease-in all;
         &:hover {
             transform: scale(1.01);
+        }
+        @media (min-width: 800px) {
+          font-size: 45px;
         }
       }
     }
@@ -260,10 +294,13 @@ export default {
   background-color: #DCC7AA;
 
   h3 {
-    font-size: 40px;
+    font-size: 31px;
     color: #0E0B16;
     margin-bottom: 45px;
     padding-left: 35px;
+    @media (min-width: 800px) {
+      font-size: 40px;
+    }
   }
 }
 

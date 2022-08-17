@@ -131,6 +131,11 @@ const routes = [
       requiresAdmin: false,
     },
   },
+  {
+    path: '/Algorithm',
+    name: "Algo",
+    beforeEnter() { location.href = 'https://michealxi.notion.site/LeetCode-85aa6d1ee5c142a0af956ad32b74a708' }
+  }
 ];
 
 const router = new VueRouter({

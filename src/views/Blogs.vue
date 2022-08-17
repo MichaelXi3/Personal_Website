@@ -66,7 +66,7 @@ export default {
         position: absolute;
         top: -70px;
         right: 0;
-        z-index: 99;
+        // z-index: 99;
     }
 
     span {
