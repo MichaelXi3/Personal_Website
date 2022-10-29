@@ -17,9 +17,22 @@
                   <span>File Chosen: {{ this.$store.state.blogPhotoName }}</span>
               </div>
           </div>
+          <div class="blogTags">
+            <div class="addTags">
+                <input type="text" placeholder="Enter a tag name" v-model="tagEnter">
+                <button @click="addTag">Add a tag</button>
+                <ul class="tags">
+                    <div class="tag" v-for="tag in tagNames" :key="tag">{{tag}}</div>
+                </ul>
+            </div>
+            <div class="removeTags">
+                <input type="text" placeholder="Tag name to remove" v-model="tagRemove">
+                <button @click="deleteTag">Remove a tag</button>
+            </div>
+          </div>
           <div>
               <!-- <vue-editor :editorOptions="editorSettings" useCustomImageHandler @image-added="imageHandler" v-model="blogHTML" /> -->
-              <v-md-editor v-model="text" height="400px"></v-md-editor>
+              <v-md-editor v-model="text" height="600px"></v-md-editor>
           </div>
           <div class="blog-actions">
               <button @click="uploadBlog">Publish Post</button>
@@ -40,7 +53,6 @@ import db from "../firebase/firebaseInit";
 
 import Quill from "quill";
 window.Quill = Quill;
-
 const ImageResize = require("quill-image-resize-module").default;
 Quill.register("modules/imageResize", ImageResize);
 
@@ -52,12 +64,10 @@ export default {
             error: null,
             loading: null,
             errorMsg: null,
-            //editorSettings: {
-                // modules: {
-                //     imageResize: {},
-                // }
-            //},
             text: '',
+            tagEnter: null,
+            tagRemove: null,
+            currentBlogId: null,
         };
     },
     computed: {
@@ -66,6 +76,9 @@ export default {
         },
         blogCoverPhotoName() {
             return this.$store.state.blogPhotoName;
+        },
+        tagNames() {
+            return this.$store.state.blogTags;
         },
         blogTitle: {
             get() {
@@ -85,6 +98,20 @@ export default {
         },
     },
     methods: {
+        // This method add tag to firestore tag array - local
+        addTag() {
+            if (!this.tagEnter)
+                return;
+            this.$store.commit("addBlogTags", this.tagEnter);
+            this.tagEnter = '';
+        },
+        // This method delete tag from firestore tag array - local
+        deleteTag() {
+            if (!this.tagRemove)
+                return;
+            this.$store.commit("deleteBlogTags", this.tagRemove);
+            this.tagRemove = '';
+        },
         // This func is invoked after user uploads cover photo, we sync the photo name and url to firestore
         fileChange() {
             this.file = this.$refs.blogPhoto.files[0];
@@ -133,6 +160,7 @@ export default {
                         const downloadURL = await docRef.getDownloadURL();
                         const timestamp = await Date.now();
                         const dateBase = await db.collection("blogPosts").doc();
+                        // Create new document for new blog
                         await dateBase.set({
                             blogID: dateBase.id,
                             blogHTML: this.text,
@@ -140,12 +168,39 @@ export default {
                             blogCoverPhotoName: this.blogCoverPhotoName,
                             blogTitle: this.blogTitle,
                             profileId: this.profileId,
+                            tagNames: this.tagNames,
                             date: timestamp,
                         });
+        
                         // After press the button of publish, user will be redirected to that viewPost page to see how is't looks like
                         await this.$store.dispatch("getPost");
+                        this.currentBlogId = dateBase.id;
+                        console.log("Current Blog ID is: " + this.currentBlogId);
+
+                        // Add new Tags to DB - many to many relationship
+                        
+                        for await (const element of this.tagNames) {
+                            // Add tags as a collection that subordinates to the blog doc
+                            // Add tags to Tags root collection as well
+                            const blogId = this.currentBlogId;
+                            const tagId = element; 
+                            console.log("blogId: " + blogId + " ; tagID: " + tagId);
+                            
+                            const blogsRef = db.doc(`blogPosts/${blogId}/Tags/${tagId}`);
+                            const tagsRef = db.doc(`blogTags/${tagId}/Blogs/${blogId}`);
+
+                            const batch = db.batch();
+                            batch.set(blogsRef, {});
+                            batch.set(tagsRef, {});
+
+                            // Set-up field value for blogTags to let it not empty
+                            const tagsDoc = db.doc(`blogTags/${tagId}`);
+                            batch.set(tagsDoc, { name: tagId});
+                            await batch.commit();
+                        }
+                        
                         this.loading = false;
-                        this.$router.push({ name: "ViewBlog", params: {blogid: dateBase.id} });
+                        this.$router.push({ name: "ViewBlog", params: {blogid: dateBase.id}});
                     });
                     return;
                 } else {
@@ -209,6 +264,18 @@ export default {
         position: relative;
         height: 100%;
         padding: 10px 25px 60px;
+        .blogTags {
+            margin: 0px 0px 15px 0px;
+            .tags {
+                display: flex;
+                flex-direction: row;
+                margin: 0px 0px 6px 0px;
+
+                .tag {
+                    margin: 0px 5px;
+                }
+            }
+        }
     }
 
     // Error Styling

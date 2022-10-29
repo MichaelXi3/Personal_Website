@@ -3,8 +3,8 @@
     <!-- HomePage Top Display -->
     <div class="main">
       <div class="headText">
-        <h1>Welcome to my world.</h1>
-        <h2>With Love and Creation 🪐</h2>
+        <h1>Hello, it's Michael</h1>
+        <h2>Embrace Love and Creation 🪐</h2>
       </div>
       <div class="headPic">
         <img src="../assets/headIcon.png" alt="">
@@ -122,16 +122,16 @@ export default {
   },
   methods: {
     checkScreen() {
-            this.windowWidth = window.innerWidth;
-            // Mobile device
-            if (this.windowWidth <= 750) {
-                this.isDesktop = false;
-                return;
-            }
-            // PC device
-            this.isDesktop = true;
-            return;
-        }
+      this.windowWidth = window.innerWidth;
+      // Mobile device
+      if (this.windowWidth <= 750) {
+          this.isDesktop = false;
+          return;
+      }
+      // PC device
+      this.isDesktop = true;
+      return;
+    }
   }
 };
 </script>

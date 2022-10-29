@@ -53,7 +53,7 @@ export default {
     display: flex;
     flex-direction: column;
     border-radius: 8px;
-    background-color: #E7DFDD;
+    background-color: #ffffff;
     min-height: 420px;
     max-height: 420px;
     transition: .5s ease all;

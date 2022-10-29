@@ -31,8 +31,10 @@ export default new Vuex.Store({
       },
     ],
     blogPost:[],
+    blogPostByTag:[],
     postLoaded: null,
-
+    blogTags:[],
+    allBlogTags: [],   // All recored blogTags names
     blogHTML: "Write your updates here...",
     blogTitle: "",
     blogPhotoName: "", // BlogCoverPhotoName
@@ -59,8 +61,35 @@ export default new Vuex.Store({
     allBlogPosts(state) {
       return state.blogPost;
     },
+    allBlogPostsByTag(state) {
+      return state.blogPostByTag;
+    }
   },
   mutations: {
+    // Update blog tags
+    updateBlogTags(state, payload) {
+      state.blogTags = payload;
+      console.log("Happy");
+      console.log(state.blogTags);
+    },
+    // Add blog tags
+    addBlogTags(state, payload) {
+      // BlogTags array does not exist or is empty
+      if (state.blogTags === undefined || state.blogTags.length == 0) {
+        state.blogTags.push(payload);
+      }
+      else if (!state.blogTags.includes(payload)) {
+        state.blogTags.push(payload);
+      }
+    },
+    // Delete blog tags
+    deleteBlogTags(state, payload) {
+      const index = state.blogTags.indexOf(payload);
+      if (index > -1) {
+        state.blogTags.splice(index, 1);
+      }
+      console.log(state.blogTags);
+    },
     // Create new blog post, invoke by changing blogHTML
     newBlogPost(state, payload) {
       state.blogHTML = payload;
@@ -82,6 +111,10 @@ export default new Vuex.Store({
     toggleEditPost(state, payload) {
       state.editPost = payload;
     },
+    // Set blogPostByTag
+    setBlogPostByTag(state, payload) {
+      state.blogPostByTag = payload;
+    },
     // For updating frontend after deletion
     filterBlogPost(state, payload) {
         state.blogPost = state.blogPost.filter((post) => 
@@ -94,6 +127,7 @@ export default new Vuex.Store({
       state.blogHTML = payload.blogHTML;
       state.blogPhotoFileURL = payload.blogCoverPhoto;
       state.blogPhotoName = payload.blogCoverPhotoName;
+      state.blogTags = payload.blogTags;
     },
     // Open & close the photo preview during 'create post'
     openPhotoPreview(state) {
@@ -128,9 +162,12 @@ export default new Vuex.Store({
     changeUsername(state, payload) {
       state.profileUsername = payload;
     },
+    changeBlogListByTag(state, payload) {
+      state.blogPostTag = payload;
+    }
   },
   actions: {
-    async getCurrentuser({ commit }, user) {
+    async getCurrentuser({ commit }, user ) {
       // Set curUser info after log-in
       const dataBase = await db.collection('users').doc(firebase.auth().currentUser.uid);
       const dbResults = await dataBase.get();
@@ -155,8 +192,39 @@ export default new Vuex.Store({
       commit("setProfileInitials"); // Reset user's Initials based on new First and Last name
     },
 
+    // Get blogs with certain tag
+    async getBlogsByTag({ state }, tag ) {
+      // This returns an array of doc that doc.id = blogIds based on Tag
+      const blogIdsByTag = await db.collection(`blogTags/${tag}/Blogs`).get(); 
+      // Get corresponding blogPost document
+      const blogDocs = await Promise.all(
+        blogIdsByTag.docs.map(doc => db.doc(`blogPosts/${doc.id}`).get())
+      );
+      
+      // Make sure the tmp blogList by Tag is initially empty
+      if (!state.blogPostByTag.length == 0) {
+        state.blogPostByTag = [];
+      }
+      blogDocs.forEach(doc => {
+        // Object: new post
+        const data = {
+          blogID: doc.data().blogID,
+          blogHTML: doc.data().blogHTML,
+          blogCoverPhoto: doc.data().blogCoverPhoto,
+          blogTitle: doc.data().blogTitle,
+          blogDate: doc.data().date,
+          blogCoverPhotoName: doc.data().blogCoverPhotoName,
+          blogTags: doc.data().tagNames,
+        };
+        state.blogPostByTag.push(data);
+      });
+      console.log("Blogs with " + tag + " include 👇")
+      console.log(state.blogPostByTag);
+    },
+
     // Populate the posts from Firebase database to Firestore
     async getPost({ state }) {
+      // Get all blogs
       const dataBase = await db.collection("blogPosts").orderBy('date', 'desc');
       const dbResults = await dataBase.get(); // This returns an array
       dbResults.forEach(doc => {
@@ -170,18 +238,44 @@ export default new Vuex.Store({
             blogTitle: doc.data().blogTitle,
             blogDate: doc.data().date,
             blogCoverPhotoName: doc.data().blogCoverPhotoName,
+            blogTags: doc.data().tagNames,
           };
           state.blogPost.push(data);
         }
       });
+      // Get all tags
+      const dataBaseTag = await db.collection("blogTags");
+      const dbTagResults = await dataBaseTag.get(); 
+      dbTagResults.forEach(doc => {
+        // newly added doc does not already exist in tags array
+        if (this.state.allBlogTags.length === 0 || !this.state.allBlogTags.includes(doc.id)) {
+          this.state.allBlogTags.push(doc.id);
+        }
+      });
+      console.log(this.state.allBlogTags);
       state.postLoaded = true;
     },
 
     // Delete Post Action
     async deletePost({ commit }, payload) {
-      // Delete from the backend db
-      const getPost = await db.collection("blogPosts").doc(payload);
-      await getPost.delete();
+      // Delete the blog document from the backend db
+      const blogID = payload;
+      const getPost = await db.collection("blogPosts").doc(blogID);
+      // const blogDocTagCollectionRef = await db.collection("blogPosts").doc(blogID).collection('Tag');
+      const batch = db.batch();
+
+      // ❗️Todo: Delete the tag collection within Blog doc()
+      // blogDocTagCollectionRef.get().then(function(querySnapshot) {
+      //   querySnapshot.forEach(function(doc) {
+      //     doc.ref.delete();
+      //   });
+      // });
+
+      // ❗️Todo: Delete the blogID in corresponding tag collections
+
+      batch.delete(getPost, {});
+      await batch.commit();
+
       // Commit the delete change to frontend
       commit("filterBlogPost", payload);
     },
@@ -190,7 +284,7 @@ export default new Vuex.Store({
     async updatePost({ commit, dispatch }, payload) {
       commit("filterBlogPost", payload);
       await dispatch("getPost");
-    }
+    },
   },
   modules: {
   }

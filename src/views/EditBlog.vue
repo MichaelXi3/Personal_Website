@@ -17,7 +17,19 @@
                   <span>File Chosen: {{ this.$store.state.blogPhotoName }}</span>
               </div>
           </div>
-
+          <div class="blogTags">
+            <div class="addTags">
+                <input type="text" placeholder="Enter a tag name" v-model="tagEnter">
+                <button @click="addTagUpdate">Add a tag</button>
+                <ul class="tags">
+                    <div class="tag" v-for="tag in tagNames" :key="tag">{{tag}}</div>
+                </ul>
+            </div>
+            <div class="removeTags">
+                <input type="text" placeholder="Tag name to remove" v-model="tagRemove">
+                <button @click="deleteTagUpdate">Remove a tag</button>
+            </div>
+          </div>
           <v-md-editor v-model="blogHTML" height="400px"></v-md-editor>
 
           <div class="blog-actions">
@@ -57,6 +69,8 @@ export default {
             //         imageResize: {},
             //     }
             // }
+            tagEnter: null,
+            tagRemove: null,
         };
     },
     computed: {
@@ -66,12 +80,20 @@ export default {
         blogCoverPhotoName() {
             return this.$store.state.blogPhotoName;
         },
+        tagNames: {
+            get() {
+                return this.$store.state.blogTags;
+            },
+            set(payload) {
+                this.$store.commit("updateBlogTitle", payload);
+            }
+        },
         blogTitle: {
             get() {
                 return this.$store.state.blogTitle;
             },
             set(payload) {
-                this.$store.commit("updateBlogTitle", payload);
+                this.$store.commit("updateBlogTags", payload);
             }
         },
         blogHTML: {
@@ -84,6 +106,82 @@ export default {
         },
     },
     methods: {
+        // This method add tag to firestore tag array (unused) - local
+        addTag() {
+            if (!this.tagEnter)
+                return;
+            this.$store.commit("addBlogTags", this.tagEnter);
+            this.tagEnter = '';
+        },
+        // This method delete tag from firestore tag array (unused) - local
+        deleteTag() {
+            if (!this.tagRemove)
+                return;
+            this.$store.commit("deleteBlogTags", this.tagRemove);
+            this.tagRemove = '';
+        },
+        // This method add tag to firestore tag array (update)
+        async addTagUpdate() {
+            // Error input
+            if (!this.tagEnter)
+                return;
+
+            // Update database field array 
+            var dataBase = await db.collection('blogPosts').doc(this.routeID);
+            dataBase.update({
+                tagNames: firebase.firestore.FieldValue.arrayUnion(this.tagEnter)
+            });
+
+            // Update Firestore state
+            this.$store.commit("addBlogTags", this.tagEnter);
+
+            // Update database Tags collection
+            const blogId = this.routeID;
+            const tagId = this.tagEnter; 
+            console.log("blogId: " + blogId + " ; ADD tagID: " + tagId);
+            
+            const blogsRef = db.doc(`blogPosts/${blogId}/Tags/${tagId}`);
+            const tagsRef = db.doc(`blogTags/${tagId}/Blogs/${blogId}`);
+
+            const batch = db.batch();
+            batch.set(blogsRef, {});
+            batch.set(tagsRef, {});
+
+            // Set-up field value for blogTags
+            const tagsDoc = db.doc(`blogTags/${tagId}`);
+            batch.set(tagsDoc, { name: tagId});
+            await batch.commit();
+            this.tagEnter = '';
+        },
+        // This method delete tag from firestore tag array (update)
+        async deleteTagUpdate() {
+            // Error input
+            if (!this.tagRemove)
+                return;
+
+            // Modify database field level
+            var dataBase = await db.collection('blogPosts').doc(this.routeID);
+            dataBase.update({
+                tagNames: firebase.firestore.FieldValue.arrayRemove(this.tagRemove)
+            });
+
+            // Modify local Vue state level
+            this.$store.commit("deleteBlogTags", this.tagRemove);
+
+            // Modify database collection level
+            const blogId = this.routeID;
+            const tagId = this.tagRemove; 
+            console.log("blogId: " + blogId + " ; REMOVE tagID: " + tagId);
+            
+            const blogsRef = db.doc(`blogPosts/${blogId}/Tags/${tagId}`);
+            const tagsRef = db.doc(`blogTags/${tagId}/Blogs/${blogId}`);
+
+            const batch = db.batch();
+            batch.delete(blogsRef, {});
+            batch.delete(tagsRef, {});
+            await batch.commit();
+            this.tagRemove = '';
+        },
         // This func is invoked after user uploads cover photo, we sync the photo name and url to firestore
         fileChange() {
             this.file = this.$refs.blogPhoto.files[0];
@@ -114,6 +212,57 @@ export default {
                 resetUploader();
             })
         },
+        // uploadBlog() {
+        //     // Check post validation
+        //     if (this.blogTitle.length !== 0 && this.blogHTML.length !== 0) {
+        //         // If the coverPhoto file is uploaded or URL is not NULL
+        //         if (this.$store.state.blogPhotoFileURL) {
+        //             this.loading = true;
+        //             // Upload post cover photo to Firestore Storage
+        //             const storageRef = firebase.storage().ref();
+        //             const docRef = storageRef.child(`documents/BlogCoverPhotos/${this.$store.state.blogPhotoName}`);
+        //             docRef.put(this.file).on("state_changed", (snapshot) => {
+        //                 console.log(snapshot);
+        //             }, (err) => {
+        //                 console.log(err);
+        //                 this.loading = false;
+        //             }, async () => {
+        //                 const downloadURL = await docRef.getDownloadURL();
+        //                 const timestamp = await Date.now();
+        //                 const dateBase = await db.collection("blogPosts").doc();
+        //                 await dateBase.set({
+        //                     blogID: dateBase.id,
+        //                     blogHTML: this.text,
+        //                     blogCoverPhoto: downloadURL,
+        //                     blogCoverPhotoName: this.blogCoverPhotoName,
+        //                     blogTitle: this.blogTitle,
+        //                     profileId: this.profileId,
+        //                     tagNames: this.tagNames,
+        //                     date: timestamp,
+        //                 });
+        //                 // After press the button of publish, user will be redirected to that viewPost page to see how is't looks like
+        //                 await this.$store.dispatch("getPost");
+        //                 this.loading = false;
+        //                 this.$router.push({ name: "ViewBlog", params: {blogid: dateBase.id} });
+        //             });
+        //             return;
+        //         } else {
+        //             this.error = true;
+        //             this.errorMsg = " Please ensure you uploaded a post cover photo!";
+        //             setTimeout(() => {
+        //                 this.error = false;
+        //             }, 5000);
+        //             return;
+        //         }
+        //     } else {
+        //         this.error = true;
+        //         this.errorMsg = " Please ensure Post Title & Post Content has been filled!";
+        //         setTimeout(() => {
+        //             this.error = false;
+        //         }, 5000);
+        //         return;
+        //     }
+        // },
         async updateBlog() {
             const dataBase = await db.collection('blogPosts').doc(this.routeID);
             // Check post validation
@@ -137,6 +286,7 @@ export default {
                             blogCoverPhoto: downloadURL,
                             blogCoverPhotoName: this.blogCoverPhotoName,
                             blogTitle: this.blogTitle,
+                            TagNames: this.tagNames,
                         });
                         await this.$store.dispatch("updatePost", this.routeID);
                         this.loading = false;
@@ -149,7 +299,10 @@ export default {
                 await dataBase.update({
                     blogHTML: this.blogHTML,
                     blogTitle: this.blogTitle,
+                    TagNames: this.tagNames,
                 });
+                console.log("Updating!!!!");
+                console.log(this.tagNames);
                 await this.$store.dispatch('updatePost', this.routeID);
                 this.loading = false;
                 this.$router.push({ name: "ViewBlog", params: { blogid: dataBase.id }});
@@ -215,6 +368,19 @@ export default {
         position: relative;
         height: 100%;
         padding: 10px 25px 60px;
+
+        .blogTags {
+            margin: 0px 0px 15px 0px;
+            .tags {
+                display: flex;
+                flex-direction: row;
+                margin: 0px 0px 6px 0px;
+
+                .tag {
+                    margin: 0px 5px;
+                }
+            }
+        }
     }
 
     // Error Styling

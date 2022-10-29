@@ -4,7 +4,7 @@
     <h1>The Voyage of Discovery</h1>
   </div>
   <div class="containerProj">
-      <div class="left">
+      <div class="left" v-show="isDesktop">
           <img src="https://s2.loli.net/2022/06/26/R2Qmo7ZeNVq8HYC.png" alt="" />
           <div class="left2"><img src="https://s2.loli.net/2022/06/26/UF4dhwYDJiA7gZM.png" alt="" /></div>
           <div class="left3"><img src="https://s2.loli.net/2022/06/26/Be5SK3wTVIDR2Wx.png" alt="" /></div>
@@ -112,12 +112,28 @@ export default {
   data() {
     return {
       Msg: null,
+      isDesktop: null
     }
+  },
+  created() {
+    window.addEventListener("resize", this.checkScreen);
+    this.checkScreen();
   },
   methods: {
     run() {
       this.Msg = "Hello World! ❤️";
       alert(this.Msg);
+    },
+    checkScreen() {
+      this.windowWidth = window.innerWidth;
+      // Mobile device
+      if (this.windowWidth <= 750) {
+          this.isDesktop = false;
+          return;
+      }
+      // PC device
+      this.isDesktop = true;
+      return;
     }
   }
 }

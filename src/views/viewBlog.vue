@@ -4,6 +4,10 @@
             <h2>{{ this.currentBlog[0].blogTitle }}</h2>
             <h4>Posted on: {{ new Date(this.currentBlog[0].blogDate).toLocaleString('en-us', {dataStyle:"long"})}}</h4>
             <!-- <img class="imgCover" :src="this.currentBlog[0].blogCoverPhoto" alt="" /> -->
+            <ul class="tags">
+                <div class="tagHead">Blog Tags: </div>
+                <div class="tag" v-for="tag in tagNames" :key="tag">{{tag}} </div>
+            </ul>
 
             <v-md-editor class="post-content ql-editor" v-model="this.content" mode="preview"></v-md-editor>
             <!-- <div class="post-content ql-editor" v-html="markdownToHtml"></div> -->
@@ -18,6 +22,7 @@ export default {
         return {
             currentBlog: null,
             content: null,
+            tagNames: null,
         }
     },
     computed: {
@@ -35,6 +40,8 @@ export default {
         });
 
         this.content = this.currentBlog[0].blogHTML;
+        this.tagNames = this.currentBlog[0].blogTags;
+        console.log(this.tagNames);
     },
 };
 </script>
@@ -57,6 +64,24 @@ export default {
             margin: 0 10%;
         }
 
+        .tags {
+            display: flex;
+            flex-direction: row;
+            font-weight: 400;
+            font-size: 16px;
+            margin-bottom: 12px;
+            margin-left: 15%;
+            margin-right: 15%;
+
+            .tagHead{
+                margin-right: 5px;
+            }
+
+            .tag {
+                margin-right: 5px;
+            }
+        }
+
         .imgCover {
             max-width: 600px;
             max-height: 600px;
@@ -74,7 +99,7 @@ export default {
 
         h4 {
             font-weight: 400;
-            font-size: 14px;
+            font-size: 16px;
             margin-bottom: 12px;
             margin-left: 15%;
             margin-right: 15%;
