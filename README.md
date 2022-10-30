@@ -18,7 +18,7 @@
 <img alt="sitePreview" src="https://s2.loli.net/2022/06/26/h5ZndoU1u7Fmp9T.png" width="100%"/>
 
 ## Bloggie Section
-<img alt="blog" src="https://s2.loli.net/2022/06/26/4EUa5ZxwYeMoQIn.png" width="100%"/>
+<img alt="blog" src="https://s2.loli.net/2022/10/30/XAxuCEg7L1wioaN.png" width="100%"/>
 
 ## Project Section
 <img alt="proj" src="https://s2.loli.net/2022/06/26/rofsZL2HJnAiRcK.png" width="100%"/>
